@@ -1,0 +1,2 @@
+vengadores; maria; miedo; 500
+quimica; jose; ciencia; 300
