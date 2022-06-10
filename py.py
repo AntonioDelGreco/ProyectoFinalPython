@@ -1,6 +1,7 @@
 from os import system
 
 dataLibros = []
+carrito = {}
 
 def extraccionDatos():
     data = ''
@@ -15,61 +16,59 @@ def inscripcion(nombre):
         if nombre in i:
             return True
 
-def reseña ():
-    print ('1) Buscar Reseña')
-    print ('2) Agregar Reseña')
-    eleccion = int(input('¿Eleccion?:'))
+def carro(a, b):
+    if carrito.get(a) == None:   
+        carrito[a] = b
+    
+    desea = int(input('Desea seguir comprando? (0 para no / 1 para si): '))
+    if desea == 1:
+        buscarLibro()
 
-    if eleccion == 1:
-        nombre_libro = input ('Nombre del libro:')
-        for i in x.keys():
-            if nombre_libro == i:
-                print (nombre_libro, x.values())
-              
-    elif eleccion == 2:
-
-        reseña = input('Escriba su reseña:')
-        libro = input('¿Nombre del libro?:')
-        reseñas[libro] = reseña
-
-def buscarlibro ():
+def carroActivo():
+    total = 0
+    for i in carrito.values():
+        total += i
+    compra = int(input('Comprar los libros seleccionados? (0 para no / 1 para si): '))
+    if compra == 1:
+        print('\n****** TICKET DE COMPRA ******')
+        for i, j in carrito.items():
+            print(f'\n{i}: ${j}')
+        print(f'El total de su compra es: ${total}')
+        input()
+        
+def buscarLibro():
     archivo = open('archivo.txt', 'a+')
     print ('1: Buscar por Autor')
     print ('2: Buscar por Nombre')
     print ('3: Buscar por Genero')
-    print ('4: Buscar por Precio')
     eleccion = int (input ('Elija una opcion: '))
  
     if eleccion == 1:  
-        nombreAutor = input ('Introducir nombre del autor: ')
  
+        archivo = open('archivo.txt', 'a+')
+        print ('1: Buscar por Autor')
+        print ('2: Buscar por Nombre')
+        print ('3: Buscar por Genero')
+        eleccion = int (input ('Elija una opcion: '))
+    
+        if eleccion == 1:
+            general = 'Autor'
+        elif eleccion == 2:
+            general = 'Nombre'
+        elif eleccion == 3:
+            general = 'Genero'
+    
+        variable = input(f'\nIntroducir {general} del libro: ')
+
         archivo.seek(0)
         for i in archivo:
-            if nombreAutor in i:
+            if variable in i:
                 nombreLibro, autor, generos, precio = i.strip().split('; ')
                 print(f'\nNombre: {nombreLibro}\nAutor: {autor}\nGeneros: {generos}\nPrecio: {precio}\n')
-            input()
- 
-    elif eleccion == 2:
-        nombredelLibro = input ('Introducir nombre del libro: ')
- 
-        archivo.seek(0)
-        for i in archivo:
-            if nombredelLibro in i:
-                nombreLibro, autor, generos, precio = i.strip().split('; ')
-                print(f'\nNombre: {nombreLibro}\nAutor: {autor}\nGeneros: {generos}\nPrecio: {precio}\n')
-            input()
- 
-    elif eleccion == 3:
-        genero1 = input ('Introducir genero 1:')
-        genero2 = input ('Introducir genero 2:')
-        genero3 = input ('Introducir genero 3:')
- 
-        archivo.seek(0)
-        for i in archivo:
-            if genero1 in i:
-                nombreLibro, autor, generos, precio = i.strip().split('; ')
-                print(f'\nNombre: {nombreLibro}\nAutor: {autor}\nGeneros: {generos}\nPrecio: {precio}\n')
+                precioNum = int(precio)
+                carrito = int(input('Desea agregar al carrito este libro? (0 para no / 1 para si): '))
+                if carrito == 1:
+                    carro(nombreLibro, precioNum)
     archivo.close()
     
 def agregarlibro ():
@@ -88,6 +87,25 @@ def agregarlibro ():
             archivo.write(formato + '\n')
             archivo.close() 
     
+def reseña():
+    archivo = open('archivo.txt', 'a+')
+    print ('1) Buscar Reseña')
+    print ('2) Agregar Reseña')
+    eleccion = int(input('¿Eleccion?:'))
+ 
+    if eleccion == 1:
+        nombre = input('Nombre del libro: ')
+ 
+        archivo.seek(0)
+        for i in archivo:
+            if nombre in i:
+                nombreLibro, autor, generos, precio, reseña = i.strip().split('; ')
+                print (f'Reseñas: {reseña}')
+                 
+    elif eleccion == 2:
+        reseña = input('Escriba su reseña:')
+        libro = input('¿Nombre del libro?:')
+
 def catalogo ():
     dataLibros = extraccionDatos()
     for i in dataLibros:
@@ -113,31 +131,28 @@ while True:
     print('\n+---+---+---+---+---+---+---+---+---+---+\n| B | i | b | l | i | o | t | e | c | a |\n+---+---+---+---+---+---+---+---+---+---+\n')
     print('------------------------------------------')
     print('Opcion 1: Buscar Libro')
-    print('Opcion 2: Comprar un libro')
-    print('Opcion 3: Agregar Libro, para vender')
-    print('Opcion 4: Eliminar Libro')
-    print('Opcion 5: Catalogo')
-    print('Opcion 6: Reseñas')
-    print('Opcion 7: Puntuar Libro')
+    print('Opcion 2: Agregar Libro, para vender')
+    print('Opcion 3: Eliminar Libro')
+    print('Opcion 4: Catalogo')
+    print('Opcion 5: Reseñas')
+    print('Opcion 6: Puntuar Libro')
+    print('Opcion 7: Ir al carrito')
     print('Opcion 8: Salir')
     print('------------------------------------------')
     opcion = int(input ('\nElegir Opcion: '))
 
     if opcion == 1:
-        buscarlibro()
+        buscarLibro()
     elif opcion == 2:
-        #compraLibro()
-        merca = 1
-    elif opcion == 3:
         agregarlibro ()
-    elif opcion == 4:
+    elif opcion == 3:
         eliminarLibro()
-    elif opcion == 5:
+    elif opcion == 4:
         catalogo()
-    elif opcion == 6:
+    elif opcion == 5:
         reseña()
     elif opcion == 7:
-        hola = 1
+        carroActivo()
     elif opcion == 8:
         break
 
