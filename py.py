@@ -1,7 +1,7 @@
 from os import system
-
 dataLibros = []
 carrito = {}
+reseñas = {'merlin' : 'hola'}
 
 def extraccionDatos():
     data = ''
@@ -87,24 +87,52 @@ def agregarlibro ():
             archivo.write(formato + '\n')
             archivo.close() 
     
-def reseña():
-    archivo = open('archivo.txt', 'a+')
+def busquedaDeLibros (x):
+ 
+    archivo = open('archivo.txt', 'r')
+    archivo.seek(0)
+ 
+    for i in archivo:
+        if x in i:
+            return True
+ 
+def reseña ():
+   
+ 
     print ('1) Buscar Reseña')
     print ('2) Agregar Reseña')
     eleccion = int(input('¿Eleccion?:'))
  
     if eleccion == 1:
+       
         nombre = input('Nombre del libro: ')
- 
-        archivo.seek(0)
-        for i in archivo:
-            if nombre in i:
-                nombreLibro, autor, generos, precio, reseña = i.strip().split('; ')
-                print (f'Reseñas: {reseña}')
-                 
+       
+        if busquedaDeLibros(nombre):
+            for j in reseñas:
+                if j == nombre:
+                    print(f'{nombre}:\n{reseñas.get(nombre)}')
+                else:
+                    print('El libro no tiene reseña')
+        else:
+            print ('El libro no esta registrado')
+         
+        input()
+   
     elif eleccion == 2:
-        reseña = input('Escriba su reseña:')
+ 
         libro = input('¿Nombre del libro?:')
+       
+        if reseñas.get(libro) == None:
+            reseña = input('Escriba su reseña:')
+            reseñas[libro] = reseña
+        else:
+            print('Este libro ya posee una reseña ¿Desea cambiarla?')
+            eleccion2 = int(input('1 = si : 0 = No: '))
+            if eleccion2 == 1:
+                reseña = input('Escriba su reseña:')
+                reseñas[libro] = reseña
+            else:
+                return '¡Gracias!'
 
 def catalogo ():
     dataLibros = extraccionDatos()
@@ -124,7 +152,7 @@ def eliminarLibro():
                 archivo.write(j)
             break
     archivo.close()
-        
+      
 while True:
     system('cls')
     dataLibros.clear()
@@ -135,9 +163,8 @@ while True:
     print('Opcion 3: Eliminar Libro')
     print('Opcion 4: Catalogo')
     print('Opcion 5: Reseñas')
-    print('Opcion 6: Puntuar Libro')
-    print('Opcion 7: Ir al carrito')
-    print('Opcion 8: Salir')
+    print('Opcion 6: Ir al carrito')
+    print('Opcion 7: Salir')
     print('------------------------------------------')
     opcion = int(input ('\nElegir Opcion: '))
 
@@ -151,8 +178,8 @@ while True:
         catalogo()
     elif opcion == 5:
         reseña()
-    elif opcion == 7:
+    elif opcion == 6:
         carroActivo()
-    elif opcion == 8:
+    elif opcion == 7:
         break
 
